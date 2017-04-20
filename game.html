@@ -1,0 +1,34 @@
+<script src="js/classes/Point.js"></script>
+
+<canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
+
+<script>
+        var ctx = document.getElementById("ctx").getContext("2d");
+        ctx.font = '30px Arial';
+
+        var player = new PointObj(50, 30, 40, 5);
+
+        setInterval(update, 50);
+
+        function update() {
+                updateObject(player)
+        }
+
+        function updateObject(canvasObject) {
+                                ctx.clearRect(0, 0, 500, 500);
+                canvasObject.x = (canvasObject.x + canvasObject.speedX);
+                canvasObject.y = (canvasObject.y + canvasObject.speedY);
+                ctx.fillText('P', parseInt(canvasObject.x), parseInt(canvasObject.y));
+                console.log('hello', canvasObject.x);
+
+                if (canvasObject.x < 0 || canvasObject.x > 500) {
+                        console.log('Out of Bounds');
+                        canvasObject.speedX = -canvasObject.speedX;
+                }
+
+                if (canvasObject.y < 0 || canvasObject.y > 500) {
+                        console.log('Out of Bounds');
+                        canvasObject.speedY = -canvasObject.speedY;
+                }
+        }
+</script>
