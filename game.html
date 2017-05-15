@@ -1,34 +1,69 @@
 <script src="js/classes/Point.js"></script>
+<script src="js/classes/Player.js"></script>
+<script src="js/classes/Enemy.js"></script>
 
 <canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
 
 <script>
-        var ctx = document.getElementById("ctx").getContext("2d");
-        ctx.font = '30px Arial';
+    var ctx = document.getElementById("ctx").getContext("2d");
+    ctx.font = '30px Arial';
 
-        var player = new PointObj(50, 30, 40, 5);
+    var player = new Player("P", 50, 3, 40, 1);
 
-        setInterval(update, 50);
+    var enemy1 = new Enemy("E1", 5, 1, 400, 8);
+    var enemy2 = new Enemy("E2", 35, 2, 40, 3);
+    var enemy3 = new Enemy("E3", 500, 7, 200, 6);
 
-        function update() {
-                updateObject(player)
+    var enemyList = [];
+
+    enemyList.push(enemy1);
+    enemyList.push(enemy2);
+    enemyList.push(enemy3);
+
+    setInterval(update, 10);
+
+    function update() {
+        ctx.clearRect(0, 0, 500, 500);
+        drawEntity(player);
+        for (var key in enemyList) {
+            updateEntity(enemyList[key]);
+        }
+        console.log(player);
+    }
+
+    updateEntity = function (canvasObject) {
+        drawEntity(canvasObject);
+        updateEntityPosition(canvasObject);
+    }
+
+    drawEntity = function (canvasObject) {
+        ctx.fillText(canvasObject.name, parseInt(canvasObject.x), parseInt(canvasObject.y));
+    }
+
+    updateEntityPosition = function (canvasObject) {
+
+        canvasObject.x = (canvasObject.x + canvasObject.speedX);
+        canvasObject.y = (canvasObject.y + canvasObject.speedY);
+
+        //console.log(canvasObject.name, canvasObject.x);
+
+        if (canvasObject.x < 0 || canvasObject.x > 500) {
+            console.log('Out of Bounds');
+            canvasObject.speedX = -canvasObject.speedX;
         }
 
-        function updateObject(canvasObject) {
-                                ctx.clearRect(0, 0, 500, 500);
-                canvasObject.x = (canvasObject.x + canvasObject.speedX);
-                canvasObject.y = (canvasObject.y + canvasObject.speedY);
-                ctx.fillText('P', parseInt(canvasObject.x), parseInt(canvasObject.y));
-                console.log('hello', canvasObject.x);
-
-                if (canvasObject.x < 0 || canvasObject.x > 500) {
-                        console.log('Out of Bounds');
-                        canvasObject.speedX = -canvasObject.speedX;
-                }
-
-                if (canvasObject.y < 0 || canvasObject.y > 500) {
-                        console.log('Out of Bounds');
-                        canvasObject.speedY = -canvasObject.speedY;
-                }
+        if (canvasObject.y < 0 || canvasObject.y > 500) {
+            console.log('Out of Bounds');
+            canvasObject.speedY = -canvasObject.speedY;
         }
+    }
+
+    document.onmousemove = function (mouse){
+        var mouseX = mouse.clientX;
+        var mouseY = mouse.clientY;
+
+        player.setX(mouseX);
+        player.setY(mouseY);
+        console.log(mouseX);
+    }
 </script>
