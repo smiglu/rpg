@@ -8,7 +8,7 @@
     var ctx = document.getElementById("ctx").getContext("2d");
     ctx.font = '30px Arial';
 
-    var player = new Player("P", 50, 3, 40, 1);
+    var player = new Player("P", 5, 3, 40, 1);
 
     var enemy1 = new Enemy("E1", 5, 1, 400, 8);
     var enemy2 = new Enemy("E2", 35, 2, 40, 3);
@@ -20,24 +20,35 @@
     enemyList.push(enemy2);
     enemyList.push(enemy3);
 
-    setInterval(update, 10);
+    setInterval(update, 100);
 
     function update() {
         ctx.clearRect(0, 0, 500, 500);
-        drawEntity(player);
+        drawPlayer(player);
         for (var key in enemyList) {
             updateEntity(enemyList[key]);
         }
-        console.log(player);
+        updatePlayerPosition();
     }
 
     updateEntity = function (canvasObject) {
-        drawEntity(canvasObject);
         updateEntityPosition(canvasObject);
+        drawEnemy(canvasObject);
     }
 
-    drawEntity = function (canvasObject) {
-        ctx.fillText(canvasObject.name, parseInt(canvasObject.x), parseInt(canvasObject.y));
+    drawPlayer = function (canvasObject) {
+        ctx.save();
+        ctx.fillStyle = 'green';
+        ctx.fillRect(parseInt(canvasObject.x) - 15, parseInt(canvasObject.y) - 15, canvasObject.width, canvasObject.height);
+        ctx.fillText(canvasObject.hp, 0, 30);
+
+    }
+
+    drawEnemy = function (canvasObject) {
+        ctx.save();
+        ctx.fillStyle = 'red';
+        ctx.fillRect(parseInt(canvasObject.x) - 15, parseInt(canvasObject.y) - 15, 30, 30);
+        ctx.restore();
     }
 
     updateEntityPosition = function (canvasObject) {
@@ -48,22 +59,76 @@
         //console.log(canvasObject.name, canvasObject.x);
 
         if (canvasObject.x < 0 || canvasObject.x > 500) {
-            console.log('Out of Bounds');
+            //console.log('Out of Bounds');
             canvasObject.speedX = -canvasObject.speedX;
         }
 
         if (canvasObject.y < 0 || canvasObject.y > 500) {
-            console.log('Out of Bounds');
+            //console.log('Out of Bounds');
             canvasObject.speedY = -canvasObject.speedY;
         }
     }
 
-    document.onmousemove = function (mouse){
-        var mouseX = mouse.clientX;
-        var mouseY = mouse.clientY;
+    /*document.onmousemove = function (mouse) {
+     var mouseX = mouse.clientX;
+     var mouseY = mouse.clientY;
 
-        player.setX(mouseX);
-        player.setY(mouseY);
-        console.log(mouseX);
+     player.setX(mouseX);
+     player.setY(mouseY);
+     console.log(mouseX);
+     }*/
+
+    document.onkeydown = function (event) {
+        if (event.keyCode === 68)        //d
+            player.pressingRight = true;
+        else if (event.keyCode === 83)   //s
+            player.pressingDown = true;
+        else if (event.keyCode === 65) //a
+            player.pressingLeft = true;
+        else if (event.keyCode === 87) // w
+            player.pressingUp = true;
+    }
+
+    document.onkeyup = function (event) {
+        if (event.keyCode === 68)        //d
+            player.pressingRight = false;
+        else if (event.keyCode === 83)   //s
+            player.pressingDown = false;
+        else if (event.keyCode === 65) //a
+            player.pressingLeft = false;
+        else if (event.keyCode === 87) // w
+            player.pressingUp = false;
+    }
+
+    updatePlayerPosition = function () {
+        if (player.pressingRight)
+            player.x += 30;
+        if (player.pressingLeft)
+            player.x -= 30;
+        if (player.pressingDown)
+            player.y += 30;
+        if (player.pressingUp)
+            player.y -= 30;
+
+        //ispositionvalid
+        if (player.x < player.width / 2) {
+            player.x = player.width / 2;
+            console.log('Out of Bounds1');
+        }
+        if (player.x > 500 - player.width / 2) {
+            player.x = 500 - player.width / 2;
+            console.log('Out of Bounds2');
+
+        }
+        if (player.y < player.height / 2) {
+            player.y = player.height / 2;
+            console.log('Out of Bounds3');
+
+        }
+        if (player.y > 500 - player.height / 2) {
+            player.y = 500 - player.height / 2;
+            console.log('Out of Bounds4');
+
+        }
     }
 </script>
