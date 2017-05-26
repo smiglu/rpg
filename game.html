@@ -20,7 +20,9 @@
     enemyList.push(enemy2);
     enemyList.push(enemy3);
 
-    setInterval(update, 100);
+    setInterval(update, 1);
+
+    var interval = 0;
 
     function update() {
         ctx.clearRect(0, 0, 500, 500);
@@ -79,55 +81,73 @@
      }*/
 
     document.onkeydown = function (event) {
-        if (event.keyCode === 68)        //d
+        if (event.keyCode === 68 && !player.pressingLeft && !player.pressingDown && !player.pressingUp)        //d
             player.pressingRight = true;
-        else if (event.keyCode === 83)   //s
+        else if (event.keyCode === 83 && !player.pressingLeft && !player.pressingRight && !player.pressingUp)   //s
             player.pressingDown = true;
-        else if (event.keyCode === 65) //a
+        else if (event.keyCode === 65 && !player.pressingRight && !player.pressingDown && !player.pressingUp) //a
             player.pressingLeft = true;
-        else if (event.keyCode === 87) // w
+        else if (event.keyCode === 87 && !player.pressingLeft && !player.pressingDown && !player.pressingRight) // w
             player.pressingUp = true;
     }
 
-    document.onkeyup = function (event) {
-        if (event.keyCode === 68)        //d
-            player.pressingRight = false;
-        else if (event.keyCode === 83)   //s
-            player.pressingDown = false;
-        else if (event.keyCode === 65) //a
-            player.pressingLeft = false;
-        else if (event.keyCode === 87) // w
-            player.pressingUp = false;
-    }
+    /* document.onkeyup = function (event) {
+     if (event.keyCode === 68)        //d
+     player.pressingRight = false;
+     else if (event.keyCode === 83)   //s
+     player.pressingDown = false;
+     else if (event.keyCode === 65) //a
+     player.pressingLeft = false;
+     else if (event.keyCode === 87) // w
+     player.pressingUp = false;
+     }*/
 
     updatePlayerPosition = function () {
-        if (player.pressingRight)
-            player.x += 30;
-        if (player.pressingLeft)
-            player.x -= 30;
-        if (player.pressingDown)
-            player.y += 30;
-        if (player.pressingUp)
-            player.y -= 30;
+        if (player.pressingRight) {
+            player.x += 5;
+        }
+
+        if (player.pressingLeft) {
+            player.x -= 5;
+        }
+        if (player.pressingDown) {
+            player.y += 5;
+        }
+        if (player.pressingUp) {
+            player.y -= 5;
+        }
+
+        if ((player.x - 15) % 30 == 0) {
+            player.pressingRight = false;
+            player.pressingLeft = false;
+        }
+
+        if ((player.y - 15) % 30 == 0) {
+            player.pressingDown = false;
+            player.pressingUp = false;
+        }
 
         //ispositionvalid
         if (player.x < player.width / 2) {
             player.x = player.width / 2;
             console.log('Out of Bounds1');
+            player.pressingLeft = false;
         }
         if (player.x > 500 - player.width / 2) {
             player.x = 500 - player.width / 2;
             console.log('Out of Bounds2');
+            player.pressingRight = false;
 
         }
         if (player.y < player.height / 2) {
             player.y = player.height / 2;
             console.log('Out of Bounds3');
-
+            player.pressingUp = false;
         }
         if (player.y > 500 - player.height / 2) {
             player.y = 500 - player.height / 2;
             console.log('Out of Bounds4');
+            player.pressingDown = false;
 
         }
     }
